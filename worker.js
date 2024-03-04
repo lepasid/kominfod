@@ -18,6 +18,10 @@ async function handleRequest(request) {
   const url = new URL(request.url);
   const refreshCache = url.searchParams.get('refresh');
 
+  if (request.method === 'OPTIONS') {
+    return handleOptionsRequest(request);
+  }
+
   if (refreshCache === 'true') {
     const domainList = await getDomainList();
     await cacheDomainList(domainList);
@@ -54,10 +58,25 @@ async function handleRequest(request) {
 
   const jsonResponse = url.searchParams.get('json') === 'true';
   const responseBody = jsonResponse ? JSON.stringify(responseObj) : generatePlainTextResponse(responseObj);
-  
-  return new Response(responseBody, {
-    headers: { 'Content-Type': jsonResponse ? 'application/json' : 'text/plain' },
-  });
+
+  const headers = {
+    'Content-Type': jsonResponse ? 'application/json' : 'text/plain',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+
+  return new Response(responseBody, { headers });
+}
+
+async function handleOptionsRequest(request) {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+
+  return new Response(null, { headers });
 }
 
 function generatePlainTextResponse(responseObj) {
