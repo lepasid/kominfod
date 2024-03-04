@@ -36,7 +36,7 @@ curl -X GET 'https://kominfod.mefi.workers.dev?domain=example.com&json=true'
 
 Expected output:
 ```
-{"blocked": false}
+{"example.com":{"blocked":false}}
 ```
 
 ### For batch, the output is abit different
@@ -63,3 +63,8 @@ Expected output:
 ```
 Cache Refreshed!
 ```
+
+# If you use this "API" regularly, i advise you to make your own CloudFlare worker
+CloudFlare has a request limit, while it is generous, i still advise you to make your own CF worker, youre not the only person using this "API"  
+The worker.js is in the repository, and PLEASE credit us; dont let the spirit of open source die out.  
+This project is licensed under CC-BY-SA-4.0
