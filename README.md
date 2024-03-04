@@ -14,7 +14,7 @@ example.com: Not Blocked!
 ```
 
 ### Batch Search domains
-You can use the *domains* parameter to batch search domains
+You can use the *domains* parameter to batch search domains, **PLEASE ONLY SEARCH UPTO 30 DOMAINS AT A TIME, THE CF WORKER CURRENTLY CAN BARELY PROCESS MORE THAN 30 DOMAINS AT ONCE**
 **cURL**
 ```
 curl -X GET 'https://kominfod.mefi.workers.dev?domains=example.com,reddit.com'

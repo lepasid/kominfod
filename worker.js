@@ -23,16 +23,11 @@ async function handleRequest(request) {
   }
 
   if (refreshCache === 'true') {
-    const domainList = await getDomainList();
-    await cacheDomainList(domainList);
+    await cacheDomainList();
     return new Response('Cache Refreshed!');
   }
 
-  let domainList = await getCachedDomainList();
-  if (!domainList) {
-    domainList = await getDomainList();
-    await cacheDomainList(domainList);
-  }
+  const domainList = await getCachedDomainList() || await getDomainList();
 
   const domainsParam = url.searchParams.get('domains');
   const domainParam = url.searchParams.get('domain');
@@ -96,13 +91,13 @@ async function getCachedDomainList() {
       return data.domainList;
     } catch (error) {
       console.error('Error parsing cached domain list:', error);
-      return null;
     }
   }
   return null;
 }
 
-async function cacheDomainList(domainList) {
+async function cacheDomainList() {
+  const domainList = await getDomainList();
   const cache = caches.default;
   try {
     await cache.put(CACHE_KEY, new Response(JSON.stringify({ domainList }), {
